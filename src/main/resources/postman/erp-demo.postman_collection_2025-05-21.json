@@ -1,0 +1,141 @@
+{
+	"info": {
+		"_postman_id": "6bb69184-8e7f-4d37-98f8-8012fe882f01",
+		"name": "erp-demo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25001821"
+	},
+	"item": [
+		{
+			"name": "create new order with items",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"docHead\": {\r\n    \"docOrderType\": \"MRN\",\r\n    \"reqBy\": \"jane.doe\",\r\n    \"totalAmount\": 1000.50\r\n  },\r\n  \"items\": [\r\n    {\r\n      \"itemNo\": 1,\r\n      \"itemCode\": \"ITEM001\",\r\n      \"price\": 100.25,\r\n      \"quantity\": 5,\r\n      \"priority\": \"HIGH\"\r\n    },\r\n    {\r\n      \"itemNo\": 2,\r\n      \"itemCode\": \"ITEM002\",\r\n      \"price\": 99.95,\r\n      \"quantity\": 5,\r\n      \"priority\": \"MEDIUM\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All orders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "All items for an order",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/orders/items?docOrderNo=MRN-20250521T122108013Z&docOrderType=MRN",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"items"
+					],
+					"query": [
+						{
+							"key": "docOrderNo",
+							"value": "MRN-20250521T122108013Z"
+						},
+						{
+							"key": "docOrderType",
+							"value": "MRN"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update items of an order",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"docHead\": {\r\n    \"docOrderNo\": \"MRN-20250521T122108013Z\",\r\n    \"docOrderType\": \"MRN\",\r\n    \"receivedDate\": \"2025-05-20T10:50:03Z\",\r\n    \"reqBy\": \"jane.doe\",\r\n    \"status\": 2\r\n  },\r\n  \"items\": [\r\n    {\r\n        \"itemNo\": 1,\r\n        \"itemCode\": \"ITEM001\",\r\n        \"price\": 100.2500,\r\n        \"quantity\": 10,\r\n        \"priority\": \"HIGH\",\r\n        \"status\": 3\r\n    },\r\n    {\r\n        \"itemNo\": 2,\r\n        \"itemCode\": \"ITEM002\",\r\n        \"price\": 99.9500,\r\n        \"quantity\": 2,\r\n        \"priority\": \"MEDIUM\",\r\n        \"status\": 4\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/orders/items",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"items"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Status update report",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/orders/items/status/report",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"orders",
+						"items",
+						"status",
+						"report"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
