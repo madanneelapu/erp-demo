@@ -4,10 +4,10 @@ import io.madan.erpdemo.datetimeexample.dto.DateExampleDto;
 import io.madan.erpdemo.datetimeexample.ibo.DateExampleIBO;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/api/event-date")
 public class DateExampleController {
     private final DateExampleIBO ibo;
 

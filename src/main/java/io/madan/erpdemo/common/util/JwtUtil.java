@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 
 public class JwtUtil {
 
-    private final String jwtSecret = "my-secret-key";
+    private final String jwtSecret = "a-string-secret-at-least-256-bits-long";
 
     public Claims extractClaims(String token) {
         return Jwts.parser()

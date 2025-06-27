@@ -9,6 +9,7 @@ import io.madan.erpdemo.datetimeexample.ibo.DateExampleIBO;
 import io.madan.erpdemo.datetimeexample.idao.DateExampleIDAO;
 import jakarta.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 
@@ -22,6 +23,7 @@ public class DateExampleBO implements DateExampleIBO {
         this.idao = idao;
     }
 
+    @Transactional
     public void saveEventDate(DateExampleDto request, String token) {
         Claims claims = jwtUtil.extractClaims(token);
         String timeZone = claims.get("timeZone", String.class);
