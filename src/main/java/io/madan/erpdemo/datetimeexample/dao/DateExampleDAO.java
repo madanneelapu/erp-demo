@@ -7,6 +7,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class DateExampleDAO implements DateExampleIDAO {
 
@@ -17,5 +19,9 @@ public class DateExampleDAO implements DateExampleIDAO {
         entityManager.persist(entity);
     }
 
+    public List<DateExampleEntity> findAllEvents() {
+        return entityManager.createQuery("SELECT u FROM DateExampleEntity u", DateExampleEntity.class)
+                .getResultList();
+    }
 
 }

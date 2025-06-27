@@ -6,8 +6,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/event-date")
+@RequestMapping("/api/user-events")
 public class DateExampleController {
     private final DateExampleIBO ibo;
 
@@ -20,5 +22,11 @@ public class DateExampleController {
                                       @RequestBody DateExampleDto reqDto) {
         ibo.saveEventDate(reqDto, authHeader);
         return ResponseEntity.ok("Saved successfully");
+    }
+
+    @GetMapping
+    public ResponseEntity<List<DateExampleDto>> listAllDates(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        List<DateExampleDto> list = ibo.findAllEvents(authHeader);
+        return ResponseEntity.ok(list);
     }
 }

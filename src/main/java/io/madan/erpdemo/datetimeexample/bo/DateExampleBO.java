@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 public class DateExampleBO implements DateExampleIBO {
@@ -24,33 +25,39 @@ public class DateExampleBO implements DateExampleIBO {
     }
 
     @Transactional
-    public void saveEventDate(DateExampleDto request, String token) {
+    public void saveEventDate(DateExampleDto dto, String token) {
+
         Claims claims = jwtUtil.extractClaims(token);
         String timeZone = claims.get("timeZone", String.class);
         String dateFormat = claims.get("dateFormat", String.class);
 
-        Instant utcInstant = DateTimeConversionUtil.convertUserDateToUtc(
-                request.getEventDate(),
-                dateFormat,
-                timeZone
-        );
+        Instant utcInstant = DateTimeConversionUtil.convertUserDateToUtc(dto.getEventDate(), dateFormat, timeZone);
 
         DateExampleEntity dateExampleEntity = new DateExampleEntity();
+        dateExampleEntity.setEventName(dto.getEventName());
         dateExampleEntity.setEventDateTime(utcInstant);
 
         idao.saveEventDate(dateExampleEntity);
     }
 
-    // Optional: method to retrieve formatted UTC date in user's timezone
-    public String getFormattedDateForUser(Instant storedUtcInstant, String token) {
+
+    public List<DateExampleDto> findAllEvents(String token) {
         Claims claims = jwtUtil.extractClaims(token);
         String timeZone = claims.get("timeZone", String.class);
         String dateFormat = claims.get("dateFormat", String.class);
 
-        return DateTimeConversionUtil.convertUtcToUserDateString(
-                storedUtcInstant,
-                dateFormat,
-                timeZone
-        );
+       return idao.findAllEvents().stream()
+                .map( e -> DateExampleDto.builder()
+                        .eventName(e.getEventName())
+                        .eventDate(
+                                DateTimeConversionUtil.convertUtcToUserDateString(
+                                        e.getEventDateTime(),
+                                        dateFormat,
+                                        timeZone
+                                )
+                        )
+                        .build()
+                ).toList();
+
     }
 }
