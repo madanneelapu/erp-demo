@@ -1,16 +1,24 @@
 package io.madan.erpdemo.datetimeexample.controller;
 
-public class DateExampleController {
-    private final UserDateService userDateService;
+import io.madan.erpdemo.datetimeexample.dto.DateExampleDto;
+import io.madan.erpdemo.datetimeexample.ibo.DateExampleIBO;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
-    public UserDateController(UserDateService userDateService) {
-        this.userDateService = userDateService;
+public class DateExampleController {
+    private final DateExampleIBO ibo;
+
+    public DateExampleController(DateExampleIBO ibo) {
+        this.ibo = ibo;
     }
 
     @PostMapping
     public ResponseEntity<?> saveDate(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                                      @RequestBody UserDateRequest request) {
-        userDateService.saveDate(request, authHeader);
+                                      @RequestBody DateExampleDto reqDto) {
+        ibo.saveEventDate(reqDto, authHeader);
         return ResponseEntity.ok("Saved successfully");
     }
 }

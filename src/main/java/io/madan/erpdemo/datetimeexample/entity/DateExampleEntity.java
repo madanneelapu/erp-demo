@@ -6,7 +6,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "user_date_event")
-public class UserDateEvent {
+public class DateExampleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
