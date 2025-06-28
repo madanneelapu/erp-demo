@@ -26,8 +26,8 @@ public class DateExampleController {
     @PostMapping
     public ResponseEntity<?> saveDate(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
                                       @RequestBody DateExampleDto reqDto) {
-        logger.info(reqDto);
-        logger.info(authHeader);
+        logger.debug(reqDto);
+        logger.debug(authHeader);
         ibo.saveEventDate(reqDto, authHeader);
         return ResponseEntity.ok("Saved successfully");
     }
