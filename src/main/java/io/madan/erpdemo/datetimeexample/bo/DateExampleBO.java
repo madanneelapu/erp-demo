@@ -27,6 +27,8 @@ public class DateExampleBO implements DateExampleIBO {
     @Transactional
     public void saveEventDate(DateExampleDto dto, String token) {
 
+        // Use your Utility class. Not  this.
+        // This can also be done in the DAO
         Claims claims = jwtUtil.extractClaims(token);
         String timeZone = claims.get("timeZone", String.class);
         String dateFormat = claims.get("dateFormat", String.class);
@@ -42,6 +44,8 @@ public class DateExampleBO implements DateExampleIBO {
 
 
     public List<DateExampleDto> findAllEvents(String token) {
+        // Use your Utility class. Not  this.
+        // This can also be done in the DAO
         Claims claims = jwtUtil.extractClaims(token);
         String timeZone = claims.get("timeZone", String.class);
         String dateFormat = claims.get("dateFormat", String.class);
