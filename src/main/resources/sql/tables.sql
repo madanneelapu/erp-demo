@@ -36,3 +36,11 @@ CREATE TABLE `madan_om_docorditemstatus` (
   PRIMARY KEY (`SerialNo`),
   INDEX `idx_docitem_status` (`DocOrderNo`, `DocOrderType`, `ItemNo`, `Status`)
 );
+
+
+CREATE TABLE `user_date_event` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `event_time` timestamp NOT NULL,
+  `event_name` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

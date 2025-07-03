@@ -13,6 +13,7 @@ import io.madan.erpdemo.ordermanagement.repository.DocOrderRepository;
 import io.madan.erpdemo.ordermanagement.service.DocOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +26,15 @@ public class DocOrderServiceImpl implements DocOrderService {
     DocOrderRepository docOrderRepository;
     DocOrderJdbcRepository docOrderJdbcRepository;
 
+    private final KafkaTemplate<String, String> kafkaTemplate;
+
     @Autowired
     public DocOrderServiceImpl(DocOrderRepository docOrderRepository,
-                               DocOrderJdbcRepository docOrderJdbcRepository) {
+                               DocOrderJdbcRepository docOrderJdbcRepository,
+                               KafkaTemplate<String, String> kafkaTemplate) {
         this.docOrderRepository = docOrderRepository;
         this.docOrderJdbcRepository = docOrderJdbcRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -41,7 +46,12 @@ public class DocOrderServiceImpl implements DocOrderService {
         String newDocOrderId = CustomIdGenerator.generateId(docOrderType);
         dto.getDocHead().setDocOrderNo(newDocOrderId);
 
-        return this.docOrderRepository.saveOrderWithItems(dto);
+        DocOrderResponseDto docOrderResponseDto = this.docOrderRepository.saveOrderWithItems(dto);
+
+        kafkaTemplate.send("test-topic", docOrderResponseDto.getDocOrderNo());
+        System.out.println("Published order No. to Kafka: " + docOrderResponseDto.getDocOrderNo());
+
+        return docOrderResponseDto;
     }
 
     @Override
