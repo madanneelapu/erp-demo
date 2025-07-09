@@ -1,5 +1,6 @@
 package io.madan.erpdemo.ordermanagement.service.impl;
 
+import io.madan.erpdemo.common.dto.NotificationDTO;
 import io.madan.erpdemo.common.util.CustomIdGenerator;
 import io.madan.erpdemo.common.util.DateTimeUtil;
 import io.madan.erpdemo.ordermanagement.dto.DocHeadDto;
@@ -26,12 +27,12 @@ public class DocOrderServiceImpl implements DocOrderService {
     DocOrderRepository docOrderRepository;
     DocOrderJdbcRepository docOrderJdbcRepository;
 
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, NotificationDTO> kafkaTemplate;
 
     @Autowired
     public DocOrderServiceImpl(DocOrderRepository docOrderRepository,
                                DocOrderJdbcRepository docOrderJdbcRepository,
-                               KafkaTemplate<String, String> kafkaTemplate) {
+                               KafkaTemplate<String, NotificationDTO> kafkaTemplate) {
         this.docOrderRepository = docOrderRepository;
         this.docOrderJdbcRepository = docOrderJdbcRepository;
         this.kafkaTemplate = kafkaTemplate;
@@ -48,8 +49,22 @@ public class DocOrderServiceImpl implements DocOrderService {
 
         DocOrderResponseDto docOrderResponseDto = this.docOrderRepository.saveOrderWithItems(dto);
 
-        kafkaTemplate.send("test-topic", docOrderResponseDto.getDocOrderNo());
-        System.out.println("Published order No. to Kafka: " + docOrderResponseDto.getDocOrderNo());
+
+        NotificationDTO notifDto = NotificationDTO.builder()
+                .orderId(docOrderResponseDto.getDocOrderNo())
+                .customerEmail("testemail@gmail.com")
+                .customerPhone("7894561230")
+                .message("Order placed successfully.")
+                .build();
+
+        kafkaTemplate.send("notification-topic", docOrderResponseDto.getDocOrderNo(), notifDto)
+                .thenAccept(result -> System.out.println("Kafka send success: "+ result.getRecordMetadata()))
+                .exceptionally(ex -> {
+                    System.out.println("Kafka send failed: " + ex.getMessage());
+                    return null;
+                });;
+
+        System.out.println("Published order No. to Kafka: " + notifDto);
 
         return docOrderResponseDto;
     }

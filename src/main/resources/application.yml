@@ -8,7 +8,13 @@ spring:
     bootstrap-servers: localhost:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 5                  # number of retry attempts
+      retry-backoff-ms: 5000      # wait 5 sec between retries
+      acks: all                   # ensure all replicas ack (safer)
+      delivery-timeout-ms: 30000  # total time to attempt delivery
+    properties:
+      spring.json.add.type.headers: false
 
   jackson:
     time-zone: UTC
@@ -29,7 +35,26 @@ spring:
 logging:
   level:
     org:
+      apache:
+        kafka:
+          clients:
+            NetworkClient: ERROR
+            Metadata: ERROR
+            FetchSessionHandler: ERROR
+            consumer:
+              internals:
+                Fetcher: ERROR
+                ConsumerCoordinator: ERROR
+            producer:
+              internals:
+                Sender: ERROR
+          common:
+            network:
+              Selector: ERROR
+            metrics:
+              Sensor: ERROR
       springframework:
+        kafka: ERROR
         security: DEBUG
         jdbc:
           core:
